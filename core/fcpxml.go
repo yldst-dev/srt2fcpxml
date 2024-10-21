@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/xml"
+	"regexp"
 	"srt2fcpxml/core/FcpXML"
 	"srt2fcpxml/core/FcpXML/Library"
 	"srt2fcpxml/core/FcpXML/Library/Event"
@@ -15,6 +16,11 @@ import (
 
 	"github.com/asticode/go-astisub"
 )
+
+func removeHTMLTags(text string) string {
+	re := regexp.MustCompile(`<.*?>`)
+	return re.ReplaceAllString(text, "")
+}
 
 func Srt2FcpXmlExport(projectName string, frameDuration interface{}, subtitles *astisub.Subtitles, width, height int) ([]byte, error) {
 	fcpxml := FcpXML.New()
@@ -30,15 +36,20 @@ func Srt2FcpXmlExport(projectName string, frameDuration interface{}, subtitles *
 
 	for index, item := range subtitles.Items {
 		textStyleDef := Title.NewTextStyleDef(index + 1)
-		text := Title.NewContent(index+1, func(lines []astisub.Line) string {
+
+		cleanText := func(lines []astisub.Line) string {
 			var os []string
 			for _, l := range lines {
-				os = append(os, l.String())
+				os = append(os, removeHTMLTags(l.String()))
 			}
 			return strings.Join(os, "\n")
-		}(item.Lines))
-		title := Title.NewTitle(item.String(), item.StartAt.Seconds(), item.EndAt.Seconds()).SetTextStyleDef(textStyleDef).SetText(text)
-		title.AddParam(Title.NewParams("Position", "9999/999166631/999166633/1/100/101", "0 -450"))
+		}(item.Lines)
+
+		titleName := removeHTMLTags(item.String())
+
+		text := Title.NewContent(index+1, cleanText)
+		title := Title.NewTitle(titleName, item.StartAt.Seconds(), item.EndAt.Seconds()).SetTextStyleDef(textStyleDef).SetText(text)
+		title.AddParam(Title.NewParams("Position", "9999/999166631/999166633/1/100/101", "0 -415"))
 		title.AddParam(Title.NewParams("Alignment", "9999/999166631/999166633/2/354/999169573/401", "1 (Center)"))
 		title.AddParam(Title.NewParams("Flatten", "9999/999166631/999166633/2/351", "1"))
 		gap.AddTitle(title)
