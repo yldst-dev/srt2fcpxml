@@ -1,47 +1,33 @@
 # srt2fcpxml
-Convert srt subtitle file to final cut pro subtitle file(fcpxml)
+srt2fcpxml은 srt 자막을 파이널컷 프로의 자막으로 변경해주는 유용한 도구입니다.
 
-This software uses final cut pro X 10.4.6 version fcpxml file as template development, if there is any problem, please upgrade to the corresponding version.
-
-srt 字幕文件转为final cut pro 字幕文件(fcpxml)
-
-本软件使用 final cut pro X 10.4.6 版本的 fcpxml 文件作为模版开发，如果有问题请升级到对应版本
+이 도구는 파이널컷 프로 최신 버전(10.8.1)에서 최종 테스트가 완료되었습니다.
 
 
-## Compile (编译)
-First, you need to have Go language development environment
-Then execute `make` command in the project directory and generate `srt2fcpxml` executable file in `build` directory.
-
-首先需要有 Go 语言开发环境
-然后在项目目录下执行`make`命令后在`build`目录下生成`srt2fcpxml`执行文件。
-
-## Download (下载)
+## 최신 릴리즈 다운로드
 Users who do not want to compile can download the [executable file](https://github.com/GanymedeNil/srt2fcpxml/releases) directly.
 
-不想编译的用户可以直接下载[执行文件](https://github.com/GanymedeNil/srt2fcpxml/releases)。
+## 사용 방법
+터미널을 사용해 해당 실행파일에 권한을 부여합니다. `chmod +x ./srt2fcpxml`
 
-## Use (使用)
-First you need to give the program execute permission `chmod +x ./srt2fcpxml`
-
-首先需要赋予程序执行权限 `chmod +x ./srt2fcpxml`
+아래는 명령줄 도구에 사용될 인자들입니다.
 
 ```bash
 $ ./srt2fcpxml
-  -fd int
-    	Frame rate is currently supported (帧率目前支持) 23.98、24、25、29.97、30、50、59.94、60 (default 25)
-  -srt string
-    	srt Subtitle files (字幕文件)
-  -width int
-        width resolution default 1920 (分辨率宽 默认 1920)
-  -height int
-        high resolution default 1080 (分辨率高 默认 1080)       
+  -fd [정수]
+    	영상의 프레임레이트는 아래와 같이 지원됩니다.
+      23.98、24、25、29.97、30、50、59.94、60 (기본값은 25프레임 입니다.)
+  -srt [경로]
+    	변환할 srt 자막 파일의 경로를 입력합니다.
+  -width [정수]
+        가로 해상도를 결정합니다. (기본값 1920)
+  -height [정수]
+        세로 해상도를 결정합니다. (기본값 1080)
 ```
 
-## Execution (执行)
+## 최종 예시
 
 ```bash
 $ ./srt2fcpxml -srt /tmp/test.srt
 ```
-he `fcpxml` file named with srt file name will be generated automatically in the directory of srt file.
-
-在 srt 文件的目录中会自动生成以srt文件名命名的`fcpxml`文件。
+위의 명령어를 입력하면 `fcpxml` 확장자를 가진 파일이 생성됩니다. 이 파일을 더블클릭하여 파이널컷 프로에서 불러오기 하면 됩니다.
